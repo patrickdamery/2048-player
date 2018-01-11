@@ -131,6 +131,7 @@ class GameManager:
 		cell = cells[randint(0, len(cells) - 1)]
 		self.grid.setCellValue(cell, tileValue)
 
+	# Have predefined board conditions to explore games from an advanced state.
 	def board1(self, grid):
 		grid.map = [[2, 0, 2, 0], [4, 32, 16, 4], [2, 4, 128, 16], [128, 1024, 4, 2]]
 
@@ -171,9 +172,7 @@ def main():
 	bo = BayesianOptimization(lambda fr, sm, mo, ma, nm, de, co: play_game(fr, sm, mo, ma, nm, de, co),
 						  {'fr': (2, 6), 'sm': (-1, 1), 'mo': (0, 2),  'ma': (0, 2), 'nm': (-1, 1), 'de': (-1, 1), 'co': (-1, 1)})
 
-	#bo.explore({'fr': [3], 'sm': [0.1], 'mo': [1], 'ma': [1], 'nm': [0.5], 'de': [0.2], 'co': [0.2]})
-
-	bo.explore({'fr': [5.0771664428677061], 'sm': [-0.13059762676063172], 'mo': [1.3682148714919597], 
+	bo.explore({'fr': [5.0771664428677061], 'sm': [-0.13059762676063172], 'mo': [1.3682148714919597],
 		'ma': [0.52214706278657907], 'nm': [-0.86627512983565302], 'de': [0.42238952601950097], 'co': [-0.39416823224808289]})
 
 	bo.maximize(init_points=5, n_iter=50, kappa=0.5)
@@ -181,8 +180,6 @@ def main():
 	# The output values can be accessed with self.res
 	print 'RESULTS'
 	print(bo.res['max'])
-
-	#print play_game(3, 0.1, 1, 1, 0, 1, 0.2, 0)
 
 if __name__ == '__main__':
 	main()

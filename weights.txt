@@ -1,5 +1,0 @@
-free_weight:2.4
-mono_weight:0.6
-max_weight:0.8
-corner_weight:0.4
-island_weight:0.0

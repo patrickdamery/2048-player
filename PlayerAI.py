@@ -24,47 +24,20 @@ goal_weight = 0
 gameover_weight = 0 # very good heuristic
 density_weight = 0
 
-
-#with open('weights.txt') as f:
-#    content = f.read().splitlines()
-
-#i = 0
-#for line in content:
-#	parts = line.split(":")
-#	n = 0
-#	for part in parts:
-#		if n%2 != 0:
-#			if i == 0:
-#				free_weight = float(part)
-#			elif i == 1:
-#				smooth_weight = float(part)
-#			elif i == 2:
-#				mono_weight = float(part)
-#			elif i == 3:
-#				max_weight = float(part)
-#			elif i == 4:
-#				corner_weight = float(part)
-#			else:
-#				island_weight = float(part)
-#			i += 1
-#		n += 1
-
 class PlayerAI(BaseAI):
 
 	#def __init__(self, fr, sm, mo, ma, nm, go, de, co):
 	def __init__(self):
-		#self.free_weight = float(fr)
-		#self.smooth_weight = float(sm)
-		#self.mono_weight = float(mo)
-		#self.max_weight = float(ma)
-		#self.newmax_weight = float(nm)
-		#self.complex_weight = float(co) # seems good heuristic
-		#self.gameover_weight = float(go) # very good heuristic
-		#self.density_weight = float(de)
-		#playerAI = PlayerAI(5.1196495268071587, -0.068015677962770082, 1.3400774762535037, 0.66702640075918174,
-		# -0.71420384633906697, 1, 0.49129756378253076, -0.35028640670441247)
-		#playerAI = PlayerAI()
-		#playerAI  	= PlayerAI(fr, sm, mo, ma, nm, go, de, co)
+		'''
+			self.free_weight = float(fr)
+			self.smooth_weight = float(sm)
+			self.mono_weight = float(mo)
+			self.max_weight = float(ma)
+			self.newmax_weight = float(nm)
+			self.complex_weight = float(co) # seems good heuristic
+			self.gameover_weight = float(go) # very good heuristic
+			self.density_weight = float(de)
+		'''
 		self.free_weight = 5.1196495268071587
 		self.smooth_weight = -0.068015677962770082
 		self.mono_weight = 1.3400774762535037
@@ -327,39 +300,6 @@ class PlayerAI(BaseAI):
 		utility += (de*self.density_weight)
 		utility += (go*self.gameover_weight)
 
-		#if chosen:
-			#print 'Heuristics:'
-			#print 'Free: ', ft
-			#print 'Smooth: ', sm
-			#print 'Mono: ', mo
-			#print 'Max: ', ma
-			#print 'New Max: ', nm
-			#print 'Complex: ', co
-			#print 'Dense: ', de
-			#print 'Game Over: ', go
-			#print 'Utility: ', utility
-		#max_base = math.log(self.maxValue(grid))/math.log(2)
-		#print grid.map
-		#utility += (self.freeTiles(grid)*free_weight)
-		#print 'Free Tiles: ', (self.freeTiles(grid)*free_weight)
-		#utility += (self.smooth(grid)*smooth_weight)
-		#print 'Smooth: ', (self.smooth(grid)*smooth_weight)
-		#utility += (self.mono(grid)*mono_weight)
-		#print 'Mono: ', (self.mono(grid)*mono_weight)
-		#utility += (self.corner(grid)*corner_weight)
-		#print 'Corner: ', (self.corner(grid)*corner_weight)
-		#utility += (self.maxValue(grid)*max_weight)
-		#utility += (self.complexity(grid)*complex_weight)
-		#utility += (self.density(grid)*density_weight)
-		#utility += (self.goalCounter(grid)*goal_weight)
-		#utility += (self.gameover(grid)*gameover_weight)
-		#utility += (self.collapseMax(grid)*newmax_weight)
-
-		#utility += (self.island(grid)*(island_weight+(max_base/10)))
-		#print 'Max Val: ', (self.maxValue(grid)*max_weight)
-
-		#print utility
-
 		return utility
 
 	def minimize(self, grid, alpha, beta, init_time, depth, current_depth, branch):
@@ -367,7 +307,6 @@ class PlayerAI(BaseAI):
 		depth -= 1
 		if time.clock() - init_time > time_limit:
 			return [None, 0, True]
-		#if grid.getMaxTile() == 2048 or depth == 0:
 		if depth == 0:
 			return [None, self.utility(grid), False]
 
@@ -381,16 +320,11 @@ class PlayerAI(BaseAI):
 			g.setCellValue(cell, 2)
 			m = self.maximize(g, alpha, beta, init_time, depth, current_depth, b)
 			b += 1
-			#print 'Min depth: ', depth
-			#print 'Min Utility Option: ', m[1]
 
 			g2 = grid.clone()
 			g2.setCellValue(cell, 4)
 			m2 = self.maximize(g2, alpha, beta, init_time, depth, current_depth, b)
 			b += 1
-
-			#print 'Min depth: ', depth
-			#print 'Min Utility Option: ', m2[1]
 
 			# Check which utility is lower.
 			if m[1] < state[1] or m2[1] < state[1]:
@@ -399,10 +333,6 @@ class PlayerAI(BaseAI):
 				else:
 					state = m2
 
-				#state[1] = state[1]+self.utility(grid)
-
-			#print 'Selected Utility: ', state[1]
-			#print ''
 			# Check if we can cut some branches.
 			if state[1] <= alpha:
 				if 'd'+str(current_depth)+'b'+str(branch) in self.dictionary:
@@ -410,7 +340,6 @@ class PlayerAI(BaseAI):
 				else:
 					self.dictionary['d'+str(current_depth)+'b'+str(branch)] = self.utility(grid)
 					state[1] += self.dictionary['d'+str(current_depth)+'b'+str(branch)]
-				#state[1] += self.utility(grid)
 				return state
 
 			if state[1] < beta:
@@ -421,7 +350,6 @@ class PlayerAI(BaseAI):
 		else:
 			self.dictionary['d'+str(current_depth)+'b'+str(branch)] = self.utility(grid)
 			state[1] += self.dictionary['d'+str(current_depth)+'b'+str(branch)]
-		#state[1] += self.utility(grid)
 
 		return state
 
@@ -430,7 +358,6 @@ class PlayerAI(BaseAI):
 		depth -= 1
 		if time.clock() - init_time > time_limit:
 			return [None, 0, True]
-		#if grid.getMaxTile() == 2048 or depth == 0:
 		if depth == 0:
 			return [None, self.utility(grid), False]
 
@@ -444,12 +371,7 @@ class PlayerAI(BaseAI):
 			g.move(move)
 			m = self.minimize(g, alpha, beta, init_time, depth, current_depth, b)
 
-			#print 'Max depth: ', depth
-			#print 'Max Utility Option: ', m[1]
-			#print 'Move: ', actionDic[move]
-			#print ''
 			# Check which utility is higher.
-
 			if m[1] > state[1]:
 				state = [move, m[1], m[2]]
 
@@ -471,9 +393,6 @@ class PlayerAI(BaseAI):
 		else:
 			self.dictionary['d'+str(current_depth)+'b'+str(branch)] = self.utility(grid)
 			state[1] += self.dictionary['d'+str(current_depth)+'b'+str(branch)]
-		#state[1] += self.utility(grid)
-		#print 'Max Utility selected: ', state[1]
-		#print 'Move ', state[0]
 		return state
 
 	def getMove(self, grid):
@@ -487,26 +406,17 @@ class PlayerAI(BaseAI):
 		depth_limit = 50
 
 		self.dictionary = {}
-		#print 'CURRENT BOARD:'
-		#print grid.map
 
 		while loop:
-		#for x in range(0, 10):
 			last_depth = depth
-			#print 'Possible moves: ', grid.getAvailableMoves()
 			move = self.maximize(grid, -9999999, 9999999, init_time, depth, 0, 0)
 			loop = time.clock() <= (init_time + time_limit)
 			depth = last_depth + 1
-			#print last_depth
-			#print move
 			if not move[2]:
 				selected_move = move
-			#else:
-			#	print 'Timeout'
+
 			if last_depth >= depth_limit:
 				loop = False
 
 		print 'Depth Achieved: ',last_depth
-		#print actionDic[selected_move[0]]
 		return selected_move[0]
-		#return randint(0, 3)
